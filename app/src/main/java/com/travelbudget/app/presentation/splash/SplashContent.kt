@@ -37,14 +37,14 @@ fun SplashContent() {
 
             Image(
                 painter = painterResource(id = R.drawable.ic_travelbudget_logo),
-                contentDescription = "MyStudy Planner Logo",
+                contentDescription = "TravelBudget Logo",
                 modifier = Modifier.size(180.dp)
             )
 
             Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                text = "MyStudy Planner",
+                text = "Travel Budget",
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontWeight = FontWeight.ExtraBold,
                     letterSpacing = 1.sp
