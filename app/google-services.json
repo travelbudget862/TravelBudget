@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1006089211013",
+    "project_id": "travelbudget-fc49b",
+    "storage_bucket": "travelbudget-fc49b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1006089211013:android:4c539c298cb3a256086dec",
+        "android_client_info": {
+          "package_name": "com.travelbudget.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDaX4zcQaYIGOu1Sbwiaijmyi4p_jqPZCw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

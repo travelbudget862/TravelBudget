@@ -5,6 +5,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.travelbudget.app.presentation.auth.AuthScreen
 import com.travelbudget.app.presentation.home.HomeScreen
 import com.travelbudget.app.presentation.splash.SplashScreen
 import com.travelbudget.app.presentation.splash.SplashViewModel
@@ -32,6 +33,16 @@ fun TravelBudgetNavGraph() {
                 onNavigateToAuth = {
                     navController.navigate(Auth) {
                         popUpTo<Splash> { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        composable<Auth> {
+            AuthScreen(
+                onAuthSuccess = {
+                    navController.navigate(Home) {
+                        popUpTo<Auth> { inclusive = true }
                     }
                 }
             )
