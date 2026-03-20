@@ -28,18 +28,35 @@ class HomeViewModel : ViewModel() {
 
                 val expenses = snapshot?.toObjects(Expense::class.java) ?: emptyList()
 
-                val total = expenses.sumOf { it.amount }
+                val totalAmount = expenses.sumOf { it.amount }
 
-                val categoryMap = expenses
-                    .groupBy { it.category }
-                    .mapValues { entry ->
-                        entry.value.sumOf { it.amount }
-                    }
+                val foodTotal = expenses
+                    .filter { it.category == "Food" }
+                    .sumOf { it.amount }
+
+                val hotelTotal = expenses
+                    .filter { it.category == "Hotel" }
+                    .sumOf { it.amount }
+
+                val transportTotal = expenses
+                    .filter { it.category == "Transport" }
+                    .sumOf { it.amount }
+
+                val otherTotal = expenses
+                    .filter { it.category == "Other" }
+                    .sumOf { it.amount }
+
+                val categoryTotals = mapOf(
+                    "Food" to foodTotal,
+                    "Hotel" to hotelTotal,
+                    "Transport" to transportTotal,
+                    "Other" to otherTotal
+                )
 
                 _uiState.value = HomeUiState(
                     expenses = expenses,
-                    totalAmount = total,
-                    categoryTotals = categoryMap,
+                    totalAmount = totalAmount,
+                    categoryTotals = categoryTotals,
                     isLoading = false
                 )
             }
