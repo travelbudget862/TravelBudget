@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.travelbudget.app" />
+                  <option name="mobileSdkAppId" value="1:1006089211013:android:4c539c298cb3a256086dec" />
+                  <option name="projectId" value="travelbudget-fc49b" />
+                  <option name="projectNumber" value="1006089211013" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
