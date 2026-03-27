@@ -1,5 +1,6 @@
 package com.travelbudget.app.presentation.addedit
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -20,6 +21,8 @@ fun AddEditExpenseContent(
 
     val categories = listOf("Food", "Hotel", "Transport", "Other")
     var expanded by remember { mutableStateOf(false) }
+    val datePickerState = rememberDatePickerState()
+    var showDatePicker by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -87,21 +90,13 @@ fun AddEditExpenseContent(
 
             OutlinedTextField(
                 value = uiState.date,
-                onValueChange = onDateChange,
+                onValueChange = {},
+                readOnly = true,
                 label = { Text("Date") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { showDatePicker = true }
             )
-
-            Card {
-                Column(Modifier.padding(16.dp)) {
-                    Text("Preview", style = MaterialTheme.typography.titleMedium)
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text("Title: ${uiState.title}")
-                    Text("Category: ${uiState.category}")
-                    Text("Amount: ₹ ${uiState.amount}")
-                    Text("Date: ${uiState.date}")
-                }
-            }
 
             Button(
                 onClick = onSaveClick,
@@ -117,6 +112,38 @@ fun AddEditExpenseContent(
                 ) {
                     Text("Delete Expense")
                 }
+            }
+        }
+        if (showDatePicker) {
+
+            DatePickerDialog(
+                onDismissRequest = { showDatePicker = false },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            datePickerState.selectedDateMillis?.let { millis ->
+                                val formattedDate = java.text.SimpleDateFormat(
+                                    "dd MMM yyyy",
+                                    java.util.Locale.getDefault()
+                                ).format(java.util.Date(millis))
+
+                                onDateChange(formattedDate)
+                            }
+                            showDatePicker = false
+                        }
+                    ) {
+                        Text("OK")
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = { showDatePicker = false }
+                    ) {
+                        Text("Cancel")
+                    }
+                }
+            ) {
+                DatePicker(state = datePickerState)
             }
         }
     }

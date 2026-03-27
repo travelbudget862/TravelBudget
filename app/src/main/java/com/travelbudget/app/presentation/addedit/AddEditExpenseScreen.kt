@@ -20,7 +20,10 @@ fun AddEditExpenseScreen(
         onCategoryChange = viewModel::updateCategory,
         onAmountChange = viewModel::updateAmount,
         onDateChange = viewModel::updateDate,
-        onSaveClick = onSaveClick,
+        onSaveClick = {
+            viewModel.saveExpense()
+            onSaveClick()
+        },
         onDeleteClick = onDeleteClick
     )
 }

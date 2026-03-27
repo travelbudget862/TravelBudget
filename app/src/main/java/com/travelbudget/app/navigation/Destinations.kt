@@ -10,3 +10,6 @@ object Home
 
 @Serializable
 object Auth
+
+@Serializable
+object AddEditExpense
