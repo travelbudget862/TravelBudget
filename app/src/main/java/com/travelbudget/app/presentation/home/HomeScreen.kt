@@ -11,7 +11,8 @@ import com.travelbudget.app.ui.theme.TravelBudgetTheme
 fun HomeScreen(
     viewModel: HomeViewModel = viewModel(),
     onAddClick: () -> Unit = {},
-    onShareClick: () -> Unit = {}
+    onShareClick: () -> Unit = {},
+    onExpenseClick: (String) -> Unit = {}
 ) {
 
     val state = viewModel.uiState.collectAsState()
@@ -19,7 +20,8 @@ fun HomeScreen(
     HomeContent(
         uiState = state.value,
         onAddClick = onAddClick,
-        onShareClick = onShareClick
+        onShareClick = onShareClick,
+        onExpenseClick = onExpenseClick
     )
 }
 
@@ -67,7 +69,8 @@ fun HomeScreenPreview() {
         HomeContent(
             uiState = previewState,
             onAddClick = {},
-            onShareClick = {}
+            onShareClick = {},
+            onExpenseClick = {}
         )
     }
 }

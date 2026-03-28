@@ -1,5 +1,6 @@
 package com.travelbudget.app.presentation.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -17,7 +18,8 @@ import com.travelbudget.app.data.model.Expense
 fun HomeContent(
     uiState: HomeUiState,
     onAddClick: () -> Unit,
-    onShareClick: () -> Unit
+    onShareClick: () -> Unit,
+    onExpenseClick: (String) -> Unit,
 ) {
 
     Scaffold(
@@ -69,7 +71,12 @@ fun HomeContent(
                 }
             } else {
                 items(uiState.expenses) { expense ->
-                    ExpenseItem(expense)
+                    ExpenseItem(
+                        expense = expense,
+                        onClick = { expenseId ->
+                            onExpenseClick(expenseId)
+                        }
+                    )
                 }
             }
         }
@@ -123,14 +130,18 @@ fun CategorySummarySection(categoryTotals: Map<String, Double>) {
 }
 
 @Composable
-fun ExpenseItem(expense: Expense) {
+fun ExpenseItem(
+    expense: Expense,
+    onClick: (String) -> Unit
+) {
 
     Card(
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
             modifier = Modifier
-                .padding(16.dp),
+                .padding(16.dp)
+                .clickable { onClick(expense.id) },
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
 

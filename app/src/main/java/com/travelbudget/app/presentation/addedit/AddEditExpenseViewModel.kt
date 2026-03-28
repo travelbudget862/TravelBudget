@@ -31,25 +31,48 @@ class AddEditExpenseViewModel : ViewModel() {
         _uiState.value = _uiState.value.copy(date = date)
     }
 
-    fun saveExpense() {
+    fun saveExpense(expenseId: String? = null) {
 
-        val currentState = _uiState.value
+        val current = _uiState.value
 
-        if (currentState.title.isBlank() ||
-            currentState.amount.isBlank() ||
-            currentState.date.isBlank()
+        if (current.title.isBlank() ||
+            current.amount.isBlank() ||
+            current.date.isBlank()
         ) return
 
         val expense = Expense(
-            title = currentState.title,
-            category = currentState.category,
-            amount = currentState.amount.toDoubleOrNull() ?: 0.0,
-            date = currentState.date,
-            timestamp = Timestamp.now()
+            id = expenseId ?: "",
+            title = current.title,
+            category = current.category,
+            amount = current.amount.toDoubleOrNull() ?: 0.0,
+            date = current.date,
+            timestamp = com.google.firebase.Timestamp.now()
         )
 
-        repository.addExpense(expense)
+        if (expenseId == null) {
+            repository.addExpense(expense)
+        } else {
+            repository.updateExpense(expense)
+        }
+    }
 
-        _uiState.value = AddEditExpenseUiState()
+    fun loadExpense(expenseId: String) {
+
+        repository.getExpensesQuery()
+            .whereEqualTo("id", expenseId)
+            .get()
+            .addOnSuccessListener { result ->
+
+                val expense = result.toObjects(Expense::class.java).firstOrNull()
+                expense?.let {
+                    _uiState.value = AddEditExpenseUiState(
+                        title = it.title,
+                        category = it.category,
+                        amount = it.amount.toString(),
+                        date = it.date,
+                        isEditMode = true
+                    )
+                }
+            }
     }
 }

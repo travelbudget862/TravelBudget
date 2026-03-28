@@ -12,4 +12,6 @@ object Home
 object Auth
 
 @Serializable
-object AddEditExpense
+data class AddEditExpense(
+    val expenseId: String? = null
+)

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.travelbudget.app.presentation.addedit.AddEditExpenseScreen
 import com.travelbudget.app.presentation.auth.AuthScreen
 import com.travelbudget.app.presentation.home.HomeScreen
@@ -52,13 +53,20 @@ fun TravelBudgetNavGraph() {
         composable<Home> {
             HomeScreen(
                 onAddClick = {
-                    navController.navigate(AddEditExpense)
+                    navController.navigate(AddEditExpense())
+                },
+                onExpenseClick = { expenseId ->
+                    navController.navigate(AddEditExpense(expenseId))
                 }
             )
         }
 
-        composable<AddEditExpense> {
+        composable<AddEditExpense> { backStackEntry ->
+
+            val expenseId = backStackEntry.toRoute<AddEditExpense>().expenseId
+
             AddEditExpenseScreen(
+                expenseId = expenseId,
                 onSaveClick = {
                     navController.popBackStack()
                 }
