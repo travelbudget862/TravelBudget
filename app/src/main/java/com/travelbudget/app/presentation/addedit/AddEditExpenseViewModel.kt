@@ -58,12 +58,12 @@ class AddEditExpenseViewModel : ViewModel() {
 
     fun loadExpense(expenseId: String) {
 
-        repository.getExpensesQuery()
-            .whereEqualTo("id", expenseId)
+        repository.getExpenseById(expenseId)
             .get()
-            .addOnSuccessListener { result ->
+            .addOnSuccessListener { document ->
 
-                val expense = result.toObjects(Expense::class.java).firstOrNull()
+                val expense = document.toObject(Expense::class.java)
+
                 expense?.let {
                     _uiState.value = AddEditExpenseUiState(
                         title = it.title,
@@ -74,5 +74,10 @@ class AddEditExpenseViewModel : ViewModel() {
                     )
                 }
             }
+    }
+
+    fun deleteExpense(expenseId: String?) {
+        if (expenseId == null) return
+        repository.deleteExpense(expenseId)
     }
 }

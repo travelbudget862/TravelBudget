@@ -136,12 +136,13 @@ fun ExpenseItem(
 ) {
 
     Card(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick(expense.id) }
     ) {
         Row(
             modifier = Modifier
-                .padding(16.dp)
-                .clickable { onClick(expense.id) },
+                .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
 

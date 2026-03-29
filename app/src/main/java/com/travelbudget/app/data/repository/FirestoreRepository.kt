@@ -36,4 +36,10 @@ class FirestoreRepository {
         return getUserExpensesRef()
             .orderBy("timestamp", Query.Direction.DESCENDING)
     }
+
+    fun getExpenseById(expenseId: String) =
+        firestore.collection("users")
+            .document(auth.currentUser?.uid ?: "")
+            .collection("expenses")
+            .document(expenseId)
 }
