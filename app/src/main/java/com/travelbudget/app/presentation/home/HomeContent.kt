@@ -28,55 +28,83 @@ fun HomeContent(
                 title = { Text("Travel Budget") },
                 actions = {
                     IconButton(onClick = onShareClick) {
-                        Icon(Icons.Default.Share, contentDescription = "Share")
+                        Icon(
+                            imageVector = Icons.Default.Share,
+                            contentDescription = "Share"
+                        )
                     }
                 }
             )
         },
         floatingActionButton = {
             FloatingActionButton(onClick = onAddClick) {
-                Icon(Icons.Default.Add, contentDescription = "Add Expense")
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add Expense"
+                )
             }
         }
     ) { padding ->
 
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .padding(padding)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .fillMaxSize()
         ) {
 
-            item {
-                TotalSpendingCard(uiState.totalAmount)
-            }
-
-            item {
-                CategorySummarySection(uiState.categoryTotals)
-            }
-
-            item {
-                Text(
-                    text = "Recent Expenses",
-                    style = MaterialTheme.typography.titleMedium
-                )
-            }
-
-            if (uiState.expenses.isEmpty()) {
-                item {
+            if (uiState.isOffline) {
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                ) {
                     Text(
-                        text = "No expenses added yet.",
-                        style = MaterialTheme.typography.bodyMedium
+                        text = "Offline Mode",
+                        modifier = Modifier.padding(12.dp),
+                        color = MaterialTheme.colorScheme.onErrorContainer
                     )
                 }
-            } else {
-                items(uiState.expenses) { expense ->
-                    ExpenseItem(
-                        expense = expense,
-                        onClick = { expenseId ->
-                            onExpenseClick(expenseId)
-                        }
+            }
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+
+                item {
+                    TotalSpendingCard(uiState.totalAmount)
+                }
+
+                item {
+                    CategorySummarySection(uiState.categoryTotals)
+                }
+
+                item {
+                    Text(
+                        text = "Recent Expenses",
+                        style = MaterialTheme.typography.titleMedium
                     )
+                }
+
+                if (uiState.expenses.isEmpty()) {
+                    item {
+                        Text(
+                            text = "No expenses added yet.",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                } else {
+                    items(uiState.expenses) { expense ->
+                        ExpenseItem(
+                            expense = expense,
+                            onClick = onExpenseClick
+                        )
+                    }
                 }
             }
         }

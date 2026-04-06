@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.ListenerRegistration
+import com.travelbudget.app.core.network.NetworkMonitor
 import com.travelbudget.app.data.local.TravelBudgetDatabase
 import com.travelbudget.app.data.local.toEntity
 import com.travelbudget.app.data.local.toExpense
@@ -23,20 +24,31 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val dao = database.expenseDao()
 
+    private val networkMonitor = NetworkMonitor(application)
+
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     private var listenerRegistration: ListenerRegistration? = null
 
     init {
+        observeNetwork()
         loadCachedExpenses()
         startListening()
     }
 
-    private fun loadCachedExpenses() {
-
+    private fun observeNetwork() {
         viewModelScope.launch {
+            networkMonitor.isOnline.collect { isOnline ->
+                _uiState.value = _uiState.value.copy(
+                    isOffline = !isOnline
+                )
+            }
+        }
+    }
 
+    private fun loadCachedExpenses() {
+        viewModelScope.launch {
             val cachedExpenses = dao.getAllExpenses()
                 .map { it.toExpense() }
 
@@ -51,7 +63,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         listenerRegistration = repository.getExpensesQuery()
             .addSnapshotListener { snapshot, error ->
 
-                if (error != null) return@addSnapshotListener
+                if (error != null) {
+                    return@addSnapshotListener
+                }
 
                 val expenses =
                     snapshot?.toObjects(Expense::class.java)
@@ -94,7 +108,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             "Other" to otherTotal
         )
 
-        _uiState.value = HomeUiState(
+        _uiState.value = _uiState.value.copy(
             expenses = expenses,
             totalAmount = totalAmount,
             categoryTotals = categoryTotals,

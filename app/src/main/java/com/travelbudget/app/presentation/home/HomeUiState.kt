@@ -6,5 +6,6 @@ data class HomeUiState(
     val expenses: List<Expense> = emptyList(),
     val totalAmount: Double = 0.0,
     val categoryTotals: Map<String, Double> = emptyMap(),
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    val isOffline: Boolean = false
 )
