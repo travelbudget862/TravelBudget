@@ -18,12 +18,8 @@ import kotlinx.coroutines.launch
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = FirestoreRepository()
-
-    private val database =
-        TravelBudgetDatabase.getDatabase(application)
-
+    private val database = TravelBudgetDatabase.getDatabase(application)
     private val dao = database.expenseDao()
-
     private val networkMonitor = NetworkMonitor(application)
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -60,12 +56,12 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun startListening() {
 
+        if (listenerRegistration != null) return
+
         listenerRegistration = repository.getExpensesQuery()
             .addSnapshotListener { snapshot, error ->
 
-                if (error != null) {
-                    return@addSnapshotListener
-                }
+                if (error != null) return@addSnapshotListener
 
                 val expenses =
                     snapshot?.toObjects(Expense::class.java)
@@ -85,27 +81,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
         val totalAmount = expenses.sumOf { it.amount }
 
-        val foodTotal = expenses
-            .filter { it.category == "Food" }
-            .sumOf { it.amount }
-
-        val hotelTotal = expenses
-            .filter { it.category == "Hotel" }
-            .sumOf { it.amount }
-
-        val transportTotal = expenses
-            .filter { it.category == "Transport" }
-            .sumOf { it.amount }
-
-        val otherTotal = expenses
-            .filter { it.category == "Other" }
-            .sumOf { it.amount }
-
         val categoryTotals = mapOf(
-            "Food" to foodTotal,
-            "Hotel" to hotelTotal,
-            "Transport" to transportTotal,
-            "Other" to otherTotal
+            "Food" to expenses.filter { it.category == "Food" }.sumOf { it.amount },
+            "Hotel" to expenses.filter { it.category == "Hotel" }.sumOf { it.amount },
+            "Transport" to expenses.filter { it.category == "Transport" }.sumOf { it.amount },
+            "Other" to expenses.filter { it.category == "Other" }.sumOf { it.amount }
         )
 
         _uiState.value = _uiState.value.copy(
