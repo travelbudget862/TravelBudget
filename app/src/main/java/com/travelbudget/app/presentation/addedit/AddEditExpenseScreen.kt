@@ -18,7 +18,7 @@ fun AddEditExpenseScreen(
     expenseId: String? = null,
     viewModel: AddEditExpenseViewModel = viewModel(),
     onSaveClick: () -> Unit = {},
-    onDeleteClick: () -> Unit = {}
+    onSettingsClick: () -> Unit = {}
 ) {
 
     val state = viewModel.uiState.collectAsState()
@@ -42,7 +42,8 @@ fun AddEditExpenseScreen(
         },
         onDeleteClick = {
             showDeleteDialog = true
-        }
+        },
+        onSettingsClick = onSettingsClick
     )
 
     if (showDeleteDialog) {
@@ -91,6 +92,7 @@ fun AddExpensePreview() {
         onAmountChange = {},
         onDateChange = {},
         onSaveClick = {},
-        onDeleteClick = {}
+        onDeleteClick = {},
+        onSettingsClick = {}
     )
 }

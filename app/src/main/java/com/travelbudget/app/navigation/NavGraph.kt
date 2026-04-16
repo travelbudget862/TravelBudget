@@ -9,6 +9,7 @@ import androidx.navigation.toRoute
 import com.travelbudget.app.presentation.addedit.AddEditExpenseScreen
 import com.travelbudget.app.presentation.auth.AuthScreen
 import com.travelbudget.app.presentation.home.HomeScreen
+import com.travelbudget.app.presentation.settings.SettingsScreen
 import com.travelbudget.app.presentation.splash.SplashScreen
 import com.travelbudget.app.presentation.splash.SplashViewModel
 
@@ -55,19 +56,36 @@ fun TravelBudgetNavGraph() {
                 onAddClick = {
                     navController.navigate(AddEditExpense())
                 },
+                onShareClick = {
+                },
                 onExpenseClick = { expenseId ->
                     navController.navigate(AddEditExpense(expenseId))
+                },
+                onSettingsClick = {
+                    navController.navigate(Settings)
                 }
             )
         }
 
         composable<AddEditExpense> { backStackEntry ->
 
-            val expenseId = backStackEntry.toRoute<AddEditExpense>().expenseId
+            val expenseId =
+                backStackEntry.toRoute<AddEditExpense>().expenseId
 
             AddEditExpenseScreen(
                 expenseId = expenseId,
                 onSaveClick = {
+                    navController.popBackStack()
+                },
+                onSettingsClick = {
+                    navController.navigate(Settings)
+                }
+            )
+        }
+
+        composable<Settings> {
+            SettingsScreen(
+                onCacheCleared = {
                     navController.popBackStack()
                 }
             )

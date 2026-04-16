@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.travelbudget.app.data.model.Expense
+import com.travelbudget.app.ui.components.AppTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -20,20 +21,15 @@ fun HomeContent(
     onAddClick: () -> Unit,
     onShareClick: () -> Unit,
     onExpenseClick: (String) -> Unit,
+    onSettingsClick: () -> Unit
 ) {
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Travel Budget") },
-                actions = {
-                    IconButton(onClick = onShareClick) {
-                        Icon(
-                            imageVector = Icons.Default.Share,
-                            contentDescription = "Share"
-                        )
-                    }
-                }
+            AppTopBar(
+                showShare = true,
+                onShareClick = onShareClick,
+                onSettingsClick = onSettingsClick
             )
         },
         floatingActionButton = {

@@ -12,7 +12,8 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel(),
     onAddClick: () -> Unit = {},
     onShareClick: () -> Unit = {},
-    onExpenseClick: (String) -> Unit = {}
+    onExpenseClick: (String) -> Unit = {},
+    onSettingsClick: () -> Unit = {}
 ) {
 
     val state = viewModel.uiState.collectAsState()
@@ -21,7 +22,8 @@ fun HomeScreen(
         uiState = state.value,
         onAddClick = onAddClick,
         onShareClick = onShareClick,
-        onExpenseClick = onExpenseClick
+        onExpenseClick = onExpenseClick,
+        onSettingsClick = onSettingsClick
     )
 }
 
@@ -70,7 +72,8 @@ fun HomeScreenPreview() {
             uiState = previewState,
             onAddClick = {},
             onShareClick = {},
-            onExpenseClick = {}
+            onExpenseClick = {},
+            onSettingsClick = {}
         )
     }
 }

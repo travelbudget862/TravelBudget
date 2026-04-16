@@ -6,6 +6,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.travelbudget.app.ui.components.AppTopBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -16,7 +17,8 @@ fun AddEditExpenseContent(
     onAmountChange: (String) -> Unit,
     onDateChange: (String) -> Unit,
     onSaveClick: () -> Unit,
-    onDeleteClick: () -> Unit
+    onDeleteClick: () -> Unit,
+    onSettingsClick: () -> Unit
 ) {
 
     val categories = listOf("Food", "Hotel", "Transport", "Other")
@@ -26,15 +28,9 @@ fun AddEditExpenseContent(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        if (uiState.isEditMode)
-                            "Edit Expense"
-                        else
-                            "Add Expense"
-                    )
-                }
+            AppTopBar(
+                showShare = false,
+                onSettingsClick = onSettingsClick
             )
         }
     ) { padding ->

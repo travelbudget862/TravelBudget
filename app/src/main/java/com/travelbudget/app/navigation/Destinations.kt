@@ -15,3 +15,6 @@ object Auth
 data class AddEditExpense(
     val expenseId: String? = null
 )
+
+@Serializable
+object Settings
