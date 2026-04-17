@@ -77,6 +77,28 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             }
     }
 
+    fun generateShareSummary(): String {
+
+        val state = _uiState.value
+
+        val builder = StringBuilder()
+
+        builder.appendLine("TravelBudget Summary")
+        builder.appendLine("---------------------------")
+        builder.appendLine("Total Spending: ₹ %.2f".format(state.totalAmount))
+        builder.appendLine()
+
+        builder.appendLine("Category Breakdown:")
+        state.categoryTotals.forEach { (category, amount) ->
+            builder.appendLine("$category: ₹ %.2f".format(amount))
+        }
+
+        builder.appendLine()
+        builder.appendLine("Generated via TravelBudget App")
+
+        return builder.toString()
+    }
+
     private fun updateUiState(expenses: List<Expense>) {
 
         val totalAmount = expenses.sumOf { it.amount }

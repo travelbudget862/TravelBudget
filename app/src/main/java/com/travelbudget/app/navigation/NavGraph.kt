@@ -56,8 +56,6 @@ fun TravelBudgetNavGraph() {
                 onAddClick = {
                     navController.navigate(AddEditExpense())
                 },
-                onShareClick = {
-                },
                 onExpenseClick = { expenseId ->
                     navController.navigate(AddEditExpense(expenseId))
                 },
@@ -85,8 +83,10 @@ fun TravelBudgetNavGraph() {
 
         composable<Settings> {
             SettingsScreen(
-                onCacheCleared = {
-                    navController.popBackStack()
+                onNavigateToAuth = {
+                    navController.navigate(Auth) {
+                        popUpTo<Home> { inclusive = true }
+                    }
                 }
             )
         }

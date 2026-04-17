@@ -1,7 +1,16 @@
 package com.travelbudget.app.presentation.home
 
+import android.content.Intent
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.travelbudget.app.data.model.Expense
@@ -11,20 +20,61 @@ import com.travelbudget.app.ui.theme.TravelBudgetTheme
 fun HomeScreen(
     viewModel: HomeViewModel = viewModel(),
     onAddClick: () -> Unit = {},
-    onShareClick: () -> Unit = {},
     onExpenseClick: (String) -> Unit = {},
     onSettingsClick: () -> Unit = {}
 ) {
 
+    val context = LocalContext.current
     val state = viewModel.uiState.collectAsState()
+
+    var showSharePreview by remember { mutableStateOf(false) }
+
+    val shareText = remember(state.value) {
+        viewModel.generateShareSummary()
+    }
 
     HomeContent(
         uiState = state.value,
         onAddClick = onAddClick,
-        onShareClick = onShareClick,
+        onShareClick = { showSharePreview = true },
         onExpenseClick = onExpenseClick,
         onSettingsClick = onSettingsClick
     )
+
+    if (showSharePreview) {
+        AlertDialog(
+            onDismissRequest = { showSharePreview = false },
+            title = { Text("Share Summary") },
+            text = {
+                Text(shareText)
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showSharePreview = false
+
+                        val intent = Intent(Intent.ACTION_SEND).apply {
+                            type = "text/plain"
+                            putExtra(Intent.EXTRA_TEXT, shareText)
+                        }
+
+                        context.startActivity(
+                            Intent.createChooser(intent, "Share via")
+                        )
+                    }
+                ) {
+                    Text("Share")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showSharePreview = false }
+                ) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
 }
 
 @Preview(showBackground = true)

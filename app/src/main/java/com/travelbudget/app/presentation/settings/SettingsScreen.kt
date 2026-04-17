@@ -9,42 +9,62 @@ import com.travelbudget.app.ui.theme.TravelBudgetTheme
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel = viewModel(),
-    onCacheCleared: () -> Unit = {}
+    onNavigateToAuth: () -> Unit = {}
 ) {
 
-    var showDialog by remember { mutableStateOf(false) }
+    var showClearDialog by remember { mutableStateOf(false) }
+    var showLogoutDialog by remember { mutableStateOf(false) }
 
     SettingsContent(
         onClearCacheClick = {
-            showDialog = true
+            showClearDialog = true
+        },
+        onLogoutClick = {
+            showLogoutDialog = true
         }
     )
 
-    if (showDialog) {
+    if (showClearDialog) {
         AlertDialog(
-            onDismissRequest = { showDialog = false },
+            onDismissRequest = { showClearDialog = false },
             title = { Text("Clear Local Cache") },
-            text = {
-                Text("Are you sure you want to clear cached expense data?")
-            },
+            text = { Text("Are you sure you want to clear cached expense data?") },
             confirmButton = {
                 TextButton(
                     onClick = {
                         viewModel.clearLocalCache {
-                            showDialog = false
-                            onCacheCleared()
+                            showClearDialog = false
                         }
                     }
-                ) {
-                    Text("Clear")
-                }
+                ) { Text("Clear") }
             },
             dismissButton = {
                 TextButton(
-                    onClick = { showDialog = false }
-                ) {
-                    Text("Cancel")
-                }
+                    onClick = { showClearDialog = false }
+                ) { Text("Cancel") }
+            }
+        )
+    }
+
+    if (showLogoutDialog) {
+        AlertDialog(
+            onDismissRequest = { showLogoutDialog = false },
+            title = { Text("Logout") },
+            text = { Text("Are you sure you want to logout?") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.logout {
+                            showLogoutDialog = false
+                            onNavigateToAuth()
+                        }
+                    }
+                ) { Text("Logout") }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showLogoutDialog = false }
+                ) { Text("Cancel") }
             }
         )
     }
@@ -56,7 +76,8 @@ fun SettingsPreview() {
 
     TravelBudgetTheme {
         SettingsContent(
-            onClearCacheClick = {}
+            onClearCacheClick = {},
+            onLogoutClick = {}
         )
     }
 }

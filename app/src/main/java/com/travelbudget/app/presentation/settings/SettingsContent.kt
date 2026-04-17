@@ -9,14 +9,13 @@ import com.travelbudget.app.ui.components.AppTopBar
 
 @Composable
 fun SettingsContent(
-    onClearCacheClick: () -> Unit
+    onClearCacheClick: () -> Unit,
+    onLogoutClick: () -> Unit
 ) {
 
     Scaffold(
         topBar = {
-            AppTopBar(
-                showShare = false
-            )
+            AppTopBar(showShare = false)
         }
     ) { padding ->
 
@@ -38,6 +37,16 @@ fun SettingsContent(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Clear Local Cache")
+            }
+
+            Button(
+                onClick = onLogoutClick,
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.error
+                )
+            ) {
+                Text("Logout")
             }
         }
     }
