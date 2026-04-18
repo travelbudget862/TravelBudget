@@ -1,7 +1,12 @@
 package com.travelbudget.app.presentation.home
 
 import android.content.Intent
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -10,8 +15,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.travelbudget.app.data.model.Expense
 import com.travelbudget.app.ui.theme.TravelBudgetTheme
@@ -44,12 +52,32 @@ fun HomeScreen(
     if (showSharePreview) {
         AlertDialog(
             onDismissRequest = { showSharePreview = false },
-            title = { Text("Share Summary") },
+            shape = RoundedCornerShape(28.dp),
+            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f),
+            tonalElevation = 8.dp,
+            title = {
+                Text(
+                    text = "Share Summary ✨",
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    color = MaterialTheme.colorScheme.primary
+                )
+            },
             text = {
-                Text(shareText)
+                Surface(
+                    shape = RoundedCornerShape(20.dp),
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.05f)
+                ) {
+                    Text(
+                        text = shareText,
+                        modifier = Modifier.padding(16.dp),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             },
             confirmButton = {
-                TextButton(
+                Button(
                     onClick = {
                         showSharePreview = false
 
@@ -61,16 +89,24 @@ fun HomeScreen(
                         context.startActivity(
                             Intent.createChooser(intent, "Share via")
                         )
-                    }
+                    },
+                    shape = RoundedCornerShape(16.dp)
                 ) {
-                    Text("Share")
+                    Text(
+                        "Share",
+                        fontWeight = FontWeight.SemiBold
+                    )
                 }
             },
             dismissButton = {
                 TextButton(
                     onClick = { showSharePreview = false }
                 ) {
-                    Text("Cancel")
+                    Text(
+                        "Cancel",
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    )
                 }
             }
         )

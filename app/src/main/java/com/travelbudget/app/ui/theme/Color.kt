@@ -2,10 +2,15 @@ package com.travelbudget.app.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+val PinkPrimary = Color(0xFFFF4D79)
+val PinkDark = Color(0xFFD81B60)
+val PinkLight = Color(0xFFFF8FA3)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+val LimeAccent = Color(0xFFB7E000)
+val LimeDark = Color(0xFF8CBF00)
+
+val BackgroundLight = Color(0xFFFFF5F7)
+val SurfaceLight = Color(0xFFFFFFFF)
+
+val BackgroundDark = Color(0xFF1A1A1A)
+val SurfaceDark = Color(0xFF242424)

@@ -11,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.travelbudget.app.R
 
@@ -30,7 +31,7 @@ fun AppTopBar(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_travelbudget_logo),
                     contentDescription = "App Logo",
-                    modifier = Modifier.size(45.dp),
+                    modifier = Modifier.size(28.dp),
                     tint = androidx.compose.ui.graphics.Color.Unspecified
                 )
 
@@ -38,7 +39,9 @@ fun AppTopBar(
 
                 Text(
                     text = "TravelBudget",
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.SemiBold
+                    )
                 )
             }
         },

@@ -1,14 +1,20 @@
 package com.travelbudget.app.presentation.home
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.travelbudget.app.data.model.Expense
 import com.travelbudget.app.ui.components.AppTopBar
@@ -23,6 +29,14 @@ fun HomeContent(
     onSettingsClick: () -> Unit
 ) {
 
+    val gradient = Brush.verticalGradient(
+        colors = listOf(
+            MaterialTheme.colorScheme.primary,
+            MaterialTheme.colorScheme.tertiary,
+            MaterialTheme.colorScheme.secondary
+        )
+    )
+
     Scaffold(
         topBar = {
             AppTopBar(
@@ -32,43 +46,29 @@ fun HomeContent(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = onAddClick) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Add Expense"
-                )
+            FloatingActionButton(
+                onClick = onAddClick,
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = Color.White
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "Add Expense")
             }
-        }
+        },
+        containerColor = Color.Transparent
     ) { padding ->
 
-        Column(
+        Box(
             modifier = Modifier
-                .padding(padding)
                 .fillMaxSize()
+                .background(gradient)
+                .padding(padding)
         ) {
-
-            if (uiState.isOffline) {
-                Card(
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
-                ) {
-                    Text(
-                        text = "Offline Mode",
-                        modifier = Modifier.padding(12.dp),
-                        color = MaterialTheme.colorScheme.onErrorContainer
-                    )
-                }
-            }
 
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
 
                 item {
@@ -82,23 +82,31 @@ fun HomeContent(
                 item {
                     Text(
                         text = "Recent Expenses",
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
+                        color = MaterialTheme.colorScheme.surface
                     )
                 }
 
                 if (uiState.expenses.isEmpty()) {
                     item {
-                        Text(
-                            text = "No expenses added yet.",
-                            style = MaterialTheme.typography.bodyMedium
-                        )
+                        Surface(
+                            shape = RoundedCornerShape(24.dp),
+                            tonalElevation = 6.dp,
+                            shadowElevation = 12.dp,
+                            color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
+                        ) {
+                            Text(
+                                text = "No expenses added yet.",
+                                modifier = Modifier.padding(24.dp),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                        }
                     }
                 } else {
                     items(uiState.expenses) { expense ->
-                        ExpenseItem(
-                            expense = expense,
-                            onClick = onExpenseClick
-                        )
+                        ExpenseItem(expense, onExpenseClick)
                     }
                 }
             }
@@ -108,20 +116,29 @@ fun HomeContent(
 
 @Composable
 fun TotalSpendingCard(total: Double) {
-    Card(
-        modifier = Modifier.fillMaxWidth()
+    Surface(
+        shape = RoundedCornerShape(32.dp),
+        shadowElevation = 16.dp,
+        tonalElevation = 8.dp,
+        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(28.dp)
         ) {
             Text(
                 text = "Total Spending",
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
             )
-            Spacer(modifier = Modifier.height(8.dp))
+
+            Spacer(modifier = Modifier.height(10.dp))
+
             Text(
                 text = "₹ %.2f".format(total),
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.headlineLarge.copy(
+                    fontWeight = FontWeight.Bold
+                ),
+                color = MaterialTheme.colorScheme.primary
             )
         }
     }
@@ -132,21 +149,41 @@ fun CategorySummarySection(categoryTotals: Map<String, Double>) {
 
     val categories = listOf("Food", "Hotel", "Transport", "Other")
 
-    Card(
-        modifier = Modifier.fillMaxWidth()
+    Surface(
+        shape = RoundedCornerShape(28.dp),
+        shadowElevation = 12.dp,
+        tonalElevation = 6.dp,
+        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             Text(
                 text = "Category Summary",
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.SemiBold
+                ),
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
             )
 
             categories.forEach { category ->
                 val amount = categoryTotals[category] ?: 0.0
-                Text("$category: ₹ %.2f".format(amount))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = category,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    )
+                    Text(
+                        text = "₹ %.2f".format(amount),
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
         }
     }
@@ -158,26 +195,51 @@ fun ExpenseItem(
     onClick: (String) -> Unit
 ) {
 
-    Card(
+    Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick(expense.id) }
+            .clickable { onClick(expense.id) },
+        shape = RoundedCornerShape(24.dp),
+        shadowElevation = 10.dp,
+        tonalElevation = 4.dp,
+        color = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f)
     ) {
         Row(
             modifier = Modifier
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+                .padding(22.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
 
             Column {
-                Text(expense.title, style = MaterialTheme.typography.titleMedium)
-                Text(expense.category, style = MaterialTheme.typography.bodySmall)
-                Text(expense.date, style = MaterialTheme.typography.bodySmall)
+                Text(
+                    expense.title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    expense.category,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                )
+
+                Text(
+                    expense.date,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                )
             }
 
             Text(
                 text = "₹ %.2f".format(expense.amount),
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary
             )
         }
     }
