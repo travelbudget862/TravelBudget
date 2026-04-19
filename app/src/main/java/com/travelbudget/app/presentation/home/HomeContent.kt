@@ -41,6 +41,7 @@ fun HomeContent(
         topBar = {
             AppTopBar(
                 showShare = true,
+                isOffline = uiState.isOffline,
                 onShareClick = onShareClick,
                 onSettingsClick = onSettingsClick
             )

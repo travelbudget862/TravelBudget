@@ -88,7 +88,8 @@ fun SettingsContent(
                     ) {
                         Text(
                             "Logout",
-                            fontWeight = FontWeight.SemiBold
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.surface
                         )
                     }
                 }
