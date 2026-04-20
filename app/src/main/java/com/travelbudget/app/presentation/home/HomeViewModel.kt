@@ -29,29 +29,50 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         observeNetwork()
-        loadCachedExpenses()
+        observeCachedExpenses()
         startListening()
     }
 
     private fun observeNetwork() {
         viewModelScope.launch {
             networkMonitor.isOnline.collect { isOnline ->
+
                 _uiState.value = _uiState.value.copy(
                     isOffline = !isOnline
                 )
+
+                if (isOnline) {
+                    restartFirestoreListener()
+                } else {
+                    stopFirestoreListener()
+                }
             }
         }
     }
 
-    private fun loadCachedExpenses() {
+    private fun observeCachedExpenses() {
         viewModelScope.launch {
-            val cachedExpenses = dao.getAllExpenses()
-                .map { it.toExpense() }
+            dao.observeExpenses().collect { entities ->
 
-            if (cachedExpenses.isNotEmpty()) {
-                updateUiState(cachedExpenses)
+                val expenses = entities.map { it.toExpense() }
+
+                if (_uiState.value.isOffline) {
+                    updateUiState(expenses)
+                }
             }
         }
+    }
+    private fun restartFirestoreListener() {
+
+        listenerRegistration?.remove()
+        listenerRegistration = null
+
+        startListening()
+    }
+
+    private fun stopFirestoreListener() {
+        listenerRegistration?.remove()
+        listenerRegistration = null
     }
 
     private fun startListening() {

@@ -16,4 +16,7 @@ interface ExpenseDao {
 
     @Query("DELETE FROM expenses")
     suspend fun clearAll()
+
+    @Query("SELECT * FROM expenses ORDER BY timestamp DESC")
+    fun observeExpenses(): kotlinx.coroutines.flow.Flow<List<ExpenseEntity>>
 }

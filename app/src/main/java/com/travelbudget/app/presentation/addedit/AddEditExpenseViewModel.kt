@@ -1,16 +1,26 @@
 package com.travelbudget.app.presentation.addedit
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.Timestamp
+import com.travelbudget.app.data.local.TravelBudgetDatabase
+import com.travelbudget.app.data.local.toEntity
 import com.travelbudget.app.data.model.Expense
 import com.travelbudget.app.data.repository.FirestoreRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import java.util.UUID
 
-class AddEditExpenseViewModel : ViewModel() {
+class AddEditExpenseViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = FirestoreRepository()
+
+    private val database = TravelBudgetDatabase.getDatabase(application)
+    private val dao = database.expenseDao()
 
     private val _uiState = MutableStateFlow(AddEditExpenseUiState())
     val uiState: StateFlow<AddEditExpenseUiState> = _uiState.asStateFlow()
@@ -35,19 +45,24 @@ class AddEditExpenseViewModel : ViewModel() {
 
         val current = _uiState.value
 
-        if (current.title.isBlank() ||
+        if (
+            current.title.isBlank() ||
             current.amount.isBlank() ||
             current.date.isBlank()
         ) return
 
         val expense = Expense(
-            id = expenseId ?: "",
+            id = expenseId ?: UUID.randomUUID().toString(), // important
             title = current.title,
             category = current.category,
             amount = current.amount.toDoubleOrNull() ?: 0.0,
             date = current.date,
-            timestamp = com.google.firebase.Timestamp.now()
+            timestamp = Timestamp.now()
         )
+
+        viewModelScope.launch {
+            dao.insertExpenses(listOf(expense.toEntity()))
+        }
 
         if (expenseId == null) {
             repository.addExpense(expense)
